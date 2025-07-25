@@ -9,11 +9,12 @@ interface CalendarProps {
   currentMonth: Date;
   trainings: Training[];
   onDeleteTraining: (id: string) => void;
+  loading?: boolean;
 }
 
 const WEEKDAYS = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'];
 
-export default function Calendar({ currentMonth, trainings, onDeleteTraining }: CalendarProps) {
+export default function Calendar({ currentMonth, trainings, onDeleteTraining, loading = false }: CalendarProps) {
   const weeks = getWeeksInMonth(currentMonth);
 
   const getTrainingsForDate = (date: Date): Training[] => {
@@ -37,6 +38,12 @@ export default function Calendar({ currentMonth, trainings, onDeleteTraining }: 
         </h2>
       </div>
 
+      {loading && (
+        <div className="calendar-loading">
+          🔄 Загрузка данных...
+        </div>
+      )}
+
       <div className="calendar-grid">
         {/* Заголовки дней недели */}
         <div className="weekdays">
@@ -57,7 +64,7 @@ export default function Calendar({ currentMonth, trainings, onDeleteTraining }: 
               return (
                 <div 
                   key={dayIndex} 
-                  className={`calendar-day ${!isCurrentMonthDay ? 'other-month' : ''}`}
+                  className={`calendar-day ${!isCurrentMonthDay ? 'other-month' : ''} ${loading ? 'loading' : ''}`}
                 >
                   <div className="day-number">
                     {date.getDate()}
@@ -69,6 +76,7 @@ export default function Calendar({ currentMonth, trainings, onDeleteTraining }: 
                         key={training.id}
                         training={training}
                         onDelete={onDeleteTraining}
+                        disabled={loading}
                       />
                     ))}
                   </div>
@@ -80,4 +88,4 @@ export default function Calendar({ currentMonth, trainings, onDeleteTraining }: 
       </div>
     </div>
   );
-} 
+}

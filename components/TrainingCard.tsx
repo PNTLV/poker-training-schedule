@@ -7,9 +7,10 @@ import { formatTime } from '../utils/dateUtils';
 interface TrainingCardProps {
   training: Training;
   onDelete: (id: string) => void;
+  disabled?: boolean;
 }
 
-export default function TrainingCard({ training, onDelete }: TrainingCardProps) {
+export default function TrainingCard({ training, onDelete, disabled = false }: TrainingCardProps) {
   const [isHovered, setIsHovered] = useState(false);
 
   const getLevelColor = (level: string) => {
@@ -23,18 +24,24 @@ export default function TrainingCard({ training, onDelete }: TrainingCardProps) 
     }
   };
 
+  const handleDelete = () => {
+    if (disabled) return;
+    onDelete(training.id);
+  };
+
   return (
     <div 
-      className="training-card"
+      className={`training-card ${disabled ? 'disabled' : ''}`}
       style={{ borderLeftColor: getLevelColor(training.level) }}
-      onMouseEnter={() => setIsHovered(true)}
+      onMouseEnter={() => !disabled && setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {isHovered && (
+      {isHovered && !disabled && (
         <button 
           className="delete-btn"
-          onClick={() => onDelete(training.id)}
+          onClick={handleDelete}
           title="Удалить тренировку"
+          disabled={disabled}
         >
           ×
         </button>
@@ -56,4 +63,4 @@ export default function TrainingCard({ training, onDelete }: TrainingCardProps) 
       </div>
     </div>
   );
-} 
+}

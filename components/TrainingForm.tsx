@@ -5,17 +5,18 @@ import { Training, TrainingLevel } from '../types';
 
 interface TrainingFormProps {
   onAddTraining: (training: Omit<Training, 'id'>) => void;
+  disabled?: boolean;
 }
 
 const LEVELS: TrainingLevel[] = ['crushers', 'medium', 'elite', 'elite +', 'intensive'];
 
-export default function TrainingForm({ onAddTraining }: TrainingFormProps) {
+export default function TrainingForm({ onAddTraining, disabled = false }: TrainingFormProps) {
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
   const [trainer, setTrainer] = useState('');
   const [level, setLevel] = useState<TrainingLevel>('medium');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!date || !time || !trainer) {
@@ -23,9 +24,11 @@ export default function TrainingForm({ onAddTraining }: TrainingFormProps) {
       return;
     }
 
+    if (disabled) return;
+
     const datetime = new Date(`${date}T${time}`);
     
-    onAddTraining({
+    await onAddTraining({
       date,
       time,
       trainer,
@@ -33,7 +36,7 @@ export default function TrainingForm({ onAddTraining }: TrainingFormProps) {
       datetime
     });
 
-    // Очищаем форму
+    // Очищаем форму после успешного добавления
     setDate('');
     setTime('');
     setTrainer('');
@@ -51,6 +54,7 @@ export default function TrainingForm({ onAddTraining }: TrainingFormProps) {
           id="date"
           value={date}
           onChange={(e) => setDate(e.target.value)}
+          disabled={disabled}
           required
         />
       </div>
@@ -62,6 +66,7 @@ export default function TrainingForm({ onAddTraining }: TrainingFormProps) {
           id="time"
           value={time}
           onChange={(e) => setTime(e.target.value)}
+          disabled={disabled}
           required
         />
       </div>
@@ -74,6 +79,7 @@ export default function TrainingForm({ onAddTraining }: TrainingFormProps) {
           value={trainer}
           onChange={(e) => setTrainer(e.target.value)}
           placeholder="Введите никнейм тренера"
+          disabled={disabled}
           required
         />
       </div>
@@ -84,6 +90,7 @@ export default function TrainingForm({ onAddTraining }: TrainingFormProps) {
           id="level"
           value={level}
           onChange={(e) => setLevel(e.target.value as TrainingLevel)}
+          disabled={disabled}
         >
           {LEVELS.map(lvl => (
             <option key={lvl} value={lvl}>{lvl}</option>
@@ -91,9 +98,9 @@ export default function TrainingForm({ onAddTraining }: TrainingFormProps) {
         </select>
       </div>
 
-      <button type="submit" className="submit-btn">
-        Добавить в расписание
+      <button type="submit" className="submit-btn" disabled={disabled}>
+        {disabled ? 'Сохранение...' : 'Добавить в расписание'}
       </button>
     </form>
   );
-} 
+}
