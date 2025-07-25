@@ -1,6 +1,6 @@
         // 🔧 НАСТРОЙКИ SUPABASE - ЗАМЕНИТЕ НА ВАШИ!
-        const SUPABASE_URL = 'https://your-project.supabase.co';
-        const SUPABASE_ANON_KEY = 'your-anon-key-here';
+        const SUPABASE_URL = 'https://axrzevziijgthxydbhnt.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF4cnpldnppaWpndGh4eWRiaG50Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM0MzYwMTEsImV4cCI6MjA2OTAxMjAxMX0.xUW8z3J1ojEgrlyhcPPbbGbtrQeGnq_bc00NQO128kg';
         
         // Инициализация Supabase
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
