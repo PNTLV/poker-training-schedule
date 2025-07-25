@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Training } from '../types';
 import TrainingForm from '../components/TrainingForm';
 import Calendar from '../components/Calendar';
+import SupabaseDebug from '../components/SupabaseDebug';
 import { supabase } from '../lib/supabaseClient';
 import './globals.css';
 
@@ -34,9 +35,10 @@ export default function HomePage() {
       
       setTrainings(formattedTrainings);
       showSuccess('Данные загружены из облака!');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Ошибка загрузки:', error);
-      setError('Ошибка загрузки данных. Работаем в оффлайн режиме.');
+      const errorMessage = error?.message || error?.toString() || 'Неизвестная ошибка';
+      setError(`Ошибка загрузки из Supabase: ${errorMessage}. Работаем в оффлайн режиме.`);
       
       // Фоллбэк к localStorage
       const localTrainings = localStorage.getItem('trainings');
@@ -76,9 +78,10 @@ export default function HomePage() {
       showSuccess('Тренировка добавлена и сохранена в облаке!');
       await loadTrainings(); // Перезагружаем данные
       
-    } catch (error) {
+    } catch (error: any) {
       console.error('Ошибка добавления:', error);
-      setError('Ошибка сохранения. Работаем в оффлайн режиме.');
+      const errorMessage = error?.message || error?.toString() || 'Неизвестная ошибка';
+      setError(`Ошибка сохранения в Supabase: ${errorMessage}. Работаем в оффлайн режиме.`);
       
       // Фоллбэк к localStorage
       const localTraining: Training = {
@@ -116,9 +119,10 @@ export default function HomePage() {
       showSuccess('Тренировка удалена!');
       await loadTrainings(); // Перезагружаем данные
       
-    } catch (error) {
+    } catch (error: any) {
       console.error('Ошибка удаления:', error);
-      setError('Ошибка удаления. Работаем в оффлайн режиме.');
+      const errorMessage = error?.message || error?.toString() || 'Неизвестная ошибка';
+      setError(`Ошибка удаления из Supabase: ${errorMessage}. Работаем в оффлайн режиме.`);
       
       // Фоллбэк к localStorage
       const updatedTrainings = trainings.filter(training => training.id !== id);
@@ -169,6 +173,9 @@ export default function HomePage() {
         <h1>Расписание тренировок покерной команды</h1>
         {loading && <div className="loading-indicator">🔄 Загрузка...</div>}
       </header>
+
+      {/* Диагностический блок - можно убрать после исправления проблем */}
+      <SupabaseDebug />
 
       <div className="app-content">
         <div className="form-section">
